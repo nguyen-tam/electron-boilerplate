@@ -12,7 +12,10 @@
     "productName": "FocusCommit",
     "appId": "com.atrofocus",
     "asar": true,
-    "asarUnpack": "**\\*.{node,dll}",
+    "asarUnpack": [
+      "**/*.{node,dll}",
+      "**/*.o"
+    ],
     "files": [
       "app/**/*",
       "node_modules/**/*",
