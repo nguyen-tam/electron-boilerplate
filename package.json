@@ -2,23 +2,57 @@
   "name": "electron-boilerplate",
   "productName": "Electron Boilerplate",
   "description": "Starter for your Electron application",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "private": true,
   "author": "Mr. Gumby <mr.gumby@example.com>",
   "copyright": "© 2017, Gumby inc.",
   "homepage": "http://example.com",
   "main": "app/main.js",
   "build": {
-    "appId": "com.example.electron-boilerplate",
+    "productName": "FocusCommit",
+    "appId": "com.atrofocus",
+    "asar": true,
+    "asarUnpack": "**\\*.{node,dll}",
     "files": [
       "app/**/*",
       "node_modules/**/*",
       "package.json"
     ],
     "directories": {
+      "output": "dist",
       "buildResources": "resources"
     },
-    "publish": null
+    "publish": {
+      "provider": "github",
+      "owner": "nguyen-tam",
+      "repo": "focuscommit_mac",
+      "protocol": "https",
+      "private": true,
+      "releaseType": "release"
+    },
+    "afterSign": ".erb/scripts/notarize.js",
+    "mas": {
+      "icon": "assets/icon.icns",
+      "provisioningProfile": "fc_mac_distribution.provisionprofile",
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "hardenedRuntime": false
+    },
+    "masDev": {
+      "icon": "assets/icon.icns",
+      "provisioningProfile": "fc_mac_development.provisionprofile",
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "hardenedRuntime": false
+    },
+    "mac": {
+      "icon": "assets/icon.icns",
+      "type": "distribution",
+      "hardenedRuntime": true,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "gatekeeperAssess": false
+    }
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -28,19 +62,23 @@
     "e2e": "mocha temp/e2e.js --require source-map-support/register",
     "test": "npm run unit && npm run e2e",
     "start": "node build/start.js",
-    "release": "npm test && webpack --config=build/webpack.app.config.js --env=production && electron-builder"
+    "release": "npm test && webpack --config=build/webpack.app.config.js --env=production && electron-builder build --mac --publish always",
+    "build-mas": "webpack --config=build/webpack.app.config.js --env=production && electron-builder build --mac mas --publish never",
+    "build-dmg": "npm test && webpack --config=build/webpack.app.config.js --env=production && electron-builder build --mac --publish never"
   },
   "dependencies": {
-    "fs-jetpack": "^4.1.0"
+    "fs-jetpack": "^4.1.0",
+    "realm": "^11.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@electron/notarize": "^1.2.3",
     "babel-loader": "^8.2.2",
     "chai": "^4.1.0",
     "css-loader": "^5.2.0",
-    "electron": "^13.0.1",
-    "electron-builder": "^22.5.1",
+    "electron": "^23.0.0",
+    "electron-builder": "^24.0.0",
     "electron-mocha": "^10.0.0",
     "mocha": "^8.3.2",
     "source-map-support": "^0.5.6",
